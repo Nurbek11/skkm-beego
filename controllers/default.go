@@ -1,0 +1,115 @@
+package controllers
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/skkm-beego/models"
+	"strconv"
+)
+
+type MainController struct {
+	beego.Controller
+}
+
+func (c *MainController) Get() {
+	c.Data["Website"] = "beego.me"
+	c.Data["Email"] = "astaxie@gmail.com"
+	c.TplName = "index.tpl"
+}
+
+func (c *MainController) Login() {
+	username := c.GetString("username")
+	password := c.GetString("password")
+	o := orm.NewOrm()
+	var user models.Users
+	o.QueryTable("users").Filter("username", username).All(&user)
+	if username == "" || password == "" {
+		c.Data["json"] = "Заполните все поля"
+	} else if username == user.Username && password == user.Password {
+		json.Unmarshal(c.Ctx.Input.RequestBody, user)
+		token := models.AddToken(user, c.Ctx.Input.Domain())
+		c.Data["json"] = map[string]string{"token": token}
+	} else if username != user.Username || password != user.Password {
+		c.Data["json"] = "Неверное имя пользователя или пароль"
+	}
+	c.ServeJSON()
+}
+
+func (c *MainController) GetAuthUser() models.Users {
+	claims := c.GetToken().Claims.(jwt.MapClaims)
+	id := claims["sub"].(float64)
+	o := orm.NewOrm()
+	var user models.Users
+	o.QueryTable("users").Filter("id", id).All(&user)
+	return user
+}
+
+func (c *MainController) GetToken() *jwt.Token {
+	var tokenString string = c.Ctx.Input.Header("token")
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return []byte(beego.AppConfig.String("HMACKEY")), nil
+
+	})
+
+	if err != nil {
+		c.Ctx.Output.SetStatus(403)
+		var responseBody models.APIResponse = models.APIResponse{403, err.Error()}
+		resBytes, err := json.Marshal(responseBody)
+		c.Ctx.Output.Body(resBytes)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return token
+
+}
+
+func (c *MainController) PickOrg() {
+	orgId := c.Ctx.Input.Param(":orgId")
+	o := orm.NewOrm()
+	var kkms []models.Kkm
+	o.QueryTable("kkm").Filter("organization_id", orgId).All(&kkms)
+	if len(kkms) == 0 {
+		c.Data["json"] = "there is no organization with such an ID"
+	} else {
+		c.Data["json"] = kkms
+	}
+
+	c.ServeJSON()
+}
+
+func (c *MainController) PickKkm() {
+
+	kkmId := c.Ctx.Input.Param(":kkmId")
+	o := orm.NewOrm()
+	var kkm []models.Kkm
+	o.QueryTable("kkm").Filter("id", kkmId).All(&kkm)
+	if len(kkm) == 0 {
+		c.Data["json"] = "there is no kkm with such an ID"
+	} else {
+		elements := map[string]map[string]string{
+			"token": map[string]string{
+				"value": c.GetToken().Raw,
+			},
+			"user": map[string]string{
+				"id":       strconv.Itoa(c.GetAuthUser().Id),
+				"username": c.GetAuthUser().Username,
+			},
+			"data": map[string]string{
+				"id":    strconv.Itoa(kkm[0].Id),
+				"title": kkm[0].Title,
+			},
+		}
+		c.Data["json"] = elements
+	}
+	c.ServeJSON()
+}
