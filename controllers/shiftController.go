@@ -116,7 +116,7 @@ func (s *ShiftController) WithdrawCash() {
 	s.ServeJSON()
 }
 
-func (s *ShiftController) ShowXreport() {
+func (s *ShiftController) ShowXreport(){
 	o := orm.NewOrm()
 	orgId := s.Ctx.Input.Param(":orgId")
 	kkmId := s.Ctx.Input.Param(":kkmId")

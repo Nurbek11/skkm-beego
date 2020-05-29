@@ -21,18 +21,18 @@ func (c *MainController) Get() {
 }
 
 func (c *MainController) Login() {
-	username := c.GetString("username")
+	email := c.GetString("email")
 	password := c.GetString("password")
 	o := orm.NewOrm()
 	var user models.Users
-	o.QueryTable("users").Filter("username", username).All(&user)
-	if username == "" || password == "" {
+	o.QueryTable("users").Filter("email", email).All(&user)
+	if email == "" || password == "" {
 		c.Data["json"] = "Заполните все поля"
-	} else if username == user.Username && password == user.Password {
+	} else if email == user.Email && password == user.Password {
 		json.Unmarshal(c.Ctx.Input.RequestBody, user)
 		token := models.AddToken(user, c.Ctx.Input.Domain())
 		c.Data["json"] = map[string]string{"token": token}
-	} else if username != user.Username || password != user.Password {
+	} else if email != user.Email || password != user.Password {
 		c.Data["json"] = "Неверное имя пользователя или пароль"
 	}
 	c.ServeJSON()
