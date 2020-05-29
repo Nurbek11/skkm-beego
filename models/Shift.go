@@ -14,7 +14,6 @@ type Shift struct {
 	IsOpenShift  bool
 	ShiftOpening time.Time `orm:"auto_now_add"`
 	ShiftClosing time.Time `orm:"auto_now_add"`
-
 	//Kkm *Kkm `orm:"rel(fk)"`
 }
 
