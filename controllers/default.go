@@ -31,7 +31,20 @@ func (c *MainController) Login() {
 	} else if email == user.Email && password == user.Password {
 		json.Unmarshal(c.Ctx.Input.RequestBody, user)
 		token := models.AddToken(user, c.Ctx.Input.Domain())
-		c.Data["json"] = map[string]string{"token": token}
+		elements := map[string]map[string]string{
+			"userInfo": map[string]string{
+				"id": strconv.Itoa(user.Id),
+				"FirstName":user.FirstName,
+				"LastName":user.LastName,
+				"email":user.Email,
+				"role":user.Role,
+
+			},
+			"token": map[string]string{
+				"value": token,
+			},
+		}
+		c.Data["json"] = elements
 	} else if email != user.Email || password != user.Password {
 		c.Data["json"] = "Неверное имя пользователя или пароль"
 	}
@@ -102,7 +115,7 @@ func (c *MainController) PickKkm() {
 			},
 			"user": map[string]string{
 				"id":       strconv.Itoa(c.GetAuthUser().Id),
-				"username": c.GetAuthUser().Username,
+				"username": c.GetAuthUser().Email,
 			},
 			"data": map[string]string{
 				"id":    strconv.Itoa(kkm[0].Id),

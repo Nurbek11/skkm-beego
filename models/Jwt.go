@@ -2,7 +2,6 @@ package models
 
 import (
 	"crypto/md5"
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/dgrijalva/jwt-go"
 	"io"
@@ -12,7 +11,7 @@ import (
 )
 
 func AddToken(u Users, d string) string {
-	fmt.Println(u.Username)
+
 	// user id
 	var uid int = u.Id
 	// current timestamp
