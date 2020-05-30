@@ -86,6 +86,14 @@ func (c *MainController) GetToken() *jwt.Token {
 
 }
 
+func(c *MainController) GetOrgs(){
+	o := orm.NewOrm()
+	var orgs models.Organization
+	o.QueryTable("organization").All(&orgs)
+	c.Data["json"] = orgs
+	c.ServeJSON()
+}
+
 func (c *MainController) PickOrg() {
 	orgId := c.Ctx.Input.Param(":orgId")
 	o := orm.NewOrm()

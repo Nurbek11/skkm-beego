@@ -11,7 +11,7 @@ type Users struct {
 	Email        string
 	Password     string
 	Role         string
-	Organization []*Organization `orm:"reverse(many)"` // reverse relationship of fk
+	//Organization []*Organization `orm:"reverse(many)"` // reverse relationship of fk
 }
 
 func Login(email, password string) bool {

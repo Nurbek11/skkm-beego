@@ -12,6 +12,7 @@ func init() {
 	ns := beego.NewNamespace("v1",
 		beego.NSRouter("/login", &controllers.MainController{}, "post:Login"),
 		beego.NSNamespace("/org",
+			beego.NSRouter("/",&controllers.MainController{},"get:GetOrgs"),
 			beego.NSRouter("/:orgId", &controllers.MainController{}, "get:PickOrg"),
 			beego.NSRouter("/:orgId/:kkmId", &controllers.MainController{}, "get:PickKkm"),
 			beego.NSRouter("/:orgId/:kkmId/open", &controllers.ShiftController{}, "post:OpenShift"),
@@ -20,7 +21,7 @@ func init() {
 			beego.NSRouter("/:orgId/:kkmId/probitCheck",&controllers.ShiftController{},"post:ProbitCheque"),
 			beego.NSRouter("/:orgId/:kkmId/depositCash", &controllers.ShiftController{}, "post:DepositCash"),
 			beego.NSRouter("/:orgId/:kkmId/withdrawCash", &controllers.ShiftController{}, "post:WithdrawCash"),
-			beego.NSRouter("/:orgId/:kkmId/Xreport",&controllers.ShiftController{},"get:ShowXreport"),
+			beego.NSRouter("/:orgId/:kkmId/Xreport",&controllers.ShiftController{},"get:ShowZreport"),
 			),
 		beego.NSBefore(handlers.Jwt),
 	)
