@@ -20,13 +20,14 @@ func (s *ShiftController) OpenShift() {
 	var shifts []models.Shift
 	var shift models.Shift
 	o.QueryTable("shift").Filter("is_open_shift", true).All(&shifts)
-
 	if len(shifts) == 0 {
 		shift.IsOpenShift = true
-		shift.KkmId, _ = s.GetInt(kkmId)
-		shift.Making = "0"
+		shift.KkmId, _ = strconv.Atoi(kkmId)
 		shift.Payouts = "0"
+		shift.Making = "0"
 		shift.Income = "0"
+		shift.ShiftOpening = time.Now()
+		shift.ShiftClosing = time.Now()
 		o.Insert(&shift)
 		s.Data["json"] = &shift
 		handlers.SetTimer()
@@ -116,7 +117,7 @@ func (s *ShiftController) WithdrawCash() {
 	s.ServeJSON()
 }
 
-func (s *ShiftController) ShowZreport(){
+func (s *ShiftController) ShowZreport() {
 	o := orm.NewOrm()
 	orgId := s.Ctx.Input.Param(":orgId")
 	kkmId := s.Ctx.Input.Param(":kkmId")
@@ -135,7 +136,7 @@ func (s *ShiftController) ShowZreport(){
 				"bin":     strconv.Itoa(organization.Bin),
 				"shift":   strconv.Itoa(shift[0].Id),
 			},
-			"salesInfo": map[string]string{
+			"info at the beginning of the shift": map[string]string{
 				"sales":             "nil",
 				"salesReturn":       "nil",
 				"salesReceipts":     "nil",

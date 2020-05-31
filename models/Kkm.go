@@ -5,5 +5,5 @@ type Kkm struct {
 	Title    string
     Cash     int
 	Organization *Organization `orm:"rel(fk)"`   // RelForeignKey relation
-	//Shift []*Shift`orm:"reverse(many)"`   // reverse relationship of fk
+
 }

@@ -12,12 +12,12 @@ type Shift struct {
 	Payouts      string
 	Making       string
 	IsOpenShift  bool
-	ShiftOpening time.Time `orm:"auto_now_add"`
-	ShiftClosing time.Time `orm:"auto_now_add"`
-	//Kkm *Kkm `orm:"rel(fk)"`
+	ShiftOpening time.Time
+	ShiftClosing time.Time
+	//`orm:"auto_now_add"`
 }
 
 
-func IsShiftOpen(shift *Shift) bool {
-	return shift.IsOpenShift
-}
+//func IsShiftOpen(shift *Shift) bool {
+//	return shift.IsOpenShift
+//}
