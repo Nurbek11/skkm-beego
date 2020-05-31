@@ -132,11 +132,13 @@ func (s *ShiftController) ShowZreport() {
 	} else {
 		elements := map[string]map[string]string{
 			"organizationInfo": map[string]string{
-				"address": organization.Address,
+				"address": 	organization.Address,
 				"bin":     strconv.Itoa(organization.Bin),
 				"shift":   strconv.Itoa(shift[0].Id),
+
 			},
 			"info at the beginning of the shift": map[string]string{
+				"opening of the shift":shift[0].ShiftOpening.String(),
 				"sales":             "nil",
 				"salesReturn":       "nil",
 				"salesReceipts":     "nil",
