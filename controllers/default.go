@@ -88,9 +88,9 @@ func (c *MainController) GetToken() *jwt.Token {
 
 func(c *MainController) GetOrgs(){
 	o := orm.NewOrm()
-	var orgs models.Organization
+	var orgs[] models.Organization
 	o.QueryTable("organization").All(&orgs)
-	c.Data["json"] = orgs
+	c.Data["json"] = &orgs
 	c.ServeJSON()
 }
 

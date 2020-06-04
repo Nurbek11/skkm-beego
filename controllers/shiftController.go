@@ -137,18 +137,26 @@ func (s *ShiftController) ShowZreport() {
 				"shift":   strconv.Itoa(shift[0].Id),
 
 			},
-			"info at the beginning of the shift": map[string]string{
+			"infoAtTheBeginningOfTheShift": map[string]string{
 				"opening of the shift":shift[0].ShiftOpening.String(),
-				"sales":             "nil",
-				"salesReturn":       "nil",
-				"salesReceipts":     "nil",
-				"sale":              "nil",
-				"salesReturnChecks": "nil",
-				"returnOfSale":      "nil",
-				"payouts":           "nil",
-				"making":            "nil",
-				"cash":              strconv.Itoa(kkm.Cash),
-				"income":            "nil",
+				"sales":"sales",
+				"payouts":"payouts",
+				"returnOfSales":"returnOfSales",
+				"refunds":"refunds",
+
+			},
+			"info": map[string]string{
+
+				"cash":"cash",
+				"making":"making",
+				"withdrawing":"withdrawing",
+			},
+			"infoForTheCurrentShift": map[string]string{
+				"closingOfTheShift":shift[0].ShiftClosing.String(),
+				"sales":"sales",
+				"payouts":"payouts",
+				"returnOfSales":"returnOfSales",
+				"refunds":"refunds",
 			},
 		}
 		s.Data["json"] = elements
