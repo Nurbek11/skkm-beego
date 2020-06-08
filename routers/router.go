@@ -23,6 +23,7 @@ func init() {
 		beego.NSNamespace("/org",
 			beego.NSRouter("/",&controllers.MainController{},"get:GetOrgs"),
 			beego.NSRouter("/:orgId", &controllers.MainController{}, "get:PickOrg"),
+			beego.NSRouter("/:orgId/kkms", &controllers.MainController{}, "get:GetKkms"),
 			beego.NSRouter("/:orgId/:kkmId", &controllers.MainController{}, "get:PickKkm"),
 			beego.NSRouter("/:orgId/:kkmId/open", &controllers.ShiftController{}, "post:OpenShift"),
 			beego.NSRouter("/:orgId/:kkmId/isopen", &controllers.ShiftController{}, "get:IsOpenShift"),

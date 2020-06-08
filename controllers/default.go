@@ -33,12 +33,11 @@ func (c *MainController) Login() {
 		token := models.AddToken(user, c.Ctx.Input.Domain())
 		elements := map[string]map[string]string{
 			"userInfo": map[string]string{
-				"id": strconv.Itoa(user.Id),
-				"FirstName":user.FirstName,
-				"LastName":user.LastName,
-				"email":user.Email,
-				"role":user.Role,
-
+				"id":        strconv.Itoa(user.Id),
+				"FirstName": user.FirstName,
+				"LastName":  user.LastName,
+				"email":     user.Email,
+				"role":      user.Role,
 			},
 			"token": map[string]string{
 				"value": token,
@@ -86,9 +85,9 @@ func (c *MainController) GetToken() *jwt.Token {
 
 }
 
-func(c *MainController) GetOrgs(){
+func (c *MainController) GetOrgs() {
 	o := orm.NewOrm()
-	var orgs[] models.Organization
+	var orgs []models.Organization
 	o.QueryTable("organization").All(&orgs)
 	c.Data["json"] = &orgs
 	c.ServeJSON()
@@ -97,14 +96,28 @@ func(c *MainController) GetOrgs(){
 func (c *MainController) PickOrg() {
 	orgId := c.Ctx.Input.Param(":orgId")
 	o := orm.NewOrm()
+	var org []models.Organization
+	var kkms []models.Kkm
+	o.QueryTable("organization").Filter("id", orgId).All(&org)
+	o.QueryTable("kkm").Filter("organization_id", orgId).All(&kkms)
+	if len(org) == 0 {
+		c.Data["json"] = "there is no organization with such an ID"
+	} else {
+		c.Data["json"] = org[0]
+	}
+	c.ServeJSON()
+}
+
+func (c *MainController) GetKkms() {
+	orgId := c.Ctx.Input.Param(":orgId")
+	o := orm.NewOrm()
 	var kkms []models.Kkm
 	o.QueryTable("kkm").Filter("organization_id", orgId).All(&kkms)
 	if len(kkms) == 0 {
-		c.Data["json"] = "there is no organization with such an ID"
+		c.Data["json"] = "There is no kkm"
 	} else {
-		c.Data["json"] = kkms
+		c.Data["json"] = &kkms
 	}
-
 	c.ServeJSON()
 }
 
