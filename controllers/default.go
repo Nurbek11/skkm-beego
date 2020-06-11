@@ -94,12 +94,12 @@ func (c *MainController) GetOrgs() {
 }
 
 func (c *MainController) PickOrg() {
-	orgId := c.Ctx.Input.Param(":orgId")
+	orgBin := c.Ctx.Input.Param(":orgBin")
 	o := orm.NewOrm()
 	var org []models.Organization
 	var kkms []models.Kkm
-	o.QueryTable("organization").Filter("id", orgId).All(&org)
-	o.QueryTable("kkm").Filter("organization_id", orgId).All(&kkms)
+	o.QueryTable("organization").Filter("bin", orgBin).All(&org)
+	o.QueryTable("kkm").Filter("organization_bin", orgBin).All(&kkms)
 	if len(org) == 0 {
 		c.Data["json"] = "there is no organization with such an ID"
 	} else {
@@ -109,10 +109,10 @@ func (c *MainController) PickOrg() {
 }
 
 func (c *MainController) GetKkms() {
-	orgId := c.Ctx.Input.Param(":orgId")
+	orgBin := c.Ctx.Input.Param(":orgBin")
 	o := orm.NewOrm()
 	var kkms []models.Kkm
-	o.QueryTable("kkm").Filter("organization_id", orgId).All(&kkms)
+	o.QueryTable("kkm").Filter("organization_bin", orgBin).All(&kkms)
 	if len(kkms) == 0 {
 		c.Data["json"] = "There is no kkm"
 	} else {
