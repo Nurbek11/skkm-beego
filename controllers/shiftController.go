@@ -136,7 +136,7 @@ func (s *ShiftController) ShowZreport() {
 		elements := map[string]map[string]string{
 			"OverInfo": map[string]string{
 				"address": 	organization.Address,
-				"bin":     strconv.Itoa(organization.Bin),
+				"bin":     organization.Bin,
 				"shift_number":   strconv.Itoa(shift[0].Id),
 				"cash":kkm.Cash,
 				"creationTime":time.Now().String(),
