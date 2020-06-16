@@ -13,4 +13,5 @@ type Product struct {
 	IsDisDiscount bool
 	IsDisExCharge bool
 	IsDisNumber   bool
+	//Cheque  *Cheque `orm:"rel(fk)"`       // RelForeignKey relation
 }

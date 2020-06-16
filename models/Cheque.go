@@ -8,4 +8,6 @@ type Cheque struct {
 	TotalCharge   string
 	NDS           string
 	PaymentType   string
+	OperationType string
+	//Product []*Product `orm:"reverse(many)"` // reverse relationship of fk
 }

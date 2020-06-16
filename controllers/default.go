@@ -95,6 +95,7 @@ func (c *MainController) GetOrgs() {
 
 func (c *MainController) PickOrg() {
 	orgBin := c.Ctx.Input.Param(":orgBin")
+
 	o := orm.NewOrm()
 	var org []models.Organization
 	var kkms []models.Kkm
@@ -103,7 +104,9 @@ func (c *MainController) PickOrg() {
 	if len(org) == 0 {
 		c.Data["json"] = "there is no organization with such an ID"
 	} else {
+
 		c.Data["json"] = org[0]
+
 	}
 	c.ServeJSON()
 }
@@ -122,7 +125,7 @@ func (c *MainController) GetKkms() {
 }
 
 func (c *MainController) PickKkm() {
-
+	password := c.GetString("password")
 	kkmId := c.Ctx.Input.Param(":kkmId")
 	o := orm.NewOrm()
 	var kkm []models.Kkm
@@ -130,20 +133,24 @@ func (c *MainController) PickKkm() {
 	if len(kkm) == 0 {
 		c.Data["json"] = "there is no kkm with such an ID"
 	} else {
-		elements := map[string]map[string]string{
-			"token": map[string]string{
-				"value": c.GetToken().Raw,
-			},
-			"user": map[string]string{
-				"id":       strconv.Itoa(c.GetAuthUser().Id),
-				"username": c.GetAuthUser().Email,
-			},
-			"data": map[string]string{
-				"id":    strconv.Itoa(kkm[0].Id),
-				"title": kkm[0].Title,
-			},
+		if kkm[0].Password != password {
+			c.Data["json"] = "not correct"
+		}else {
+			elements := map[string]map[string]string{
+				"token": map[string]string{
+					"value": c.GetToken().Raw,
+				},
+				"user": map[string]string{
+					"id":       strconv.Itoa(c.GetAuthUser().Id),
+					"username": c.GetAuthUser().Email,
+				},
+				"data": map[string]string{
+					"id":    strconv.Itoa(kkm[0].Id),
+					"title": kkm[0].Title,
+				},
+			}
+			c.Data["json"] = elements
 		}
-		c.Data["json"] = elements
 	}
 	c.ServeJSON()
 }

@@ -9,11 +9,10 @@ import (
 
 func init() {
 
-
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Content-Type","token"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Content-Type", "token"},
 		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true,
 	}))
@@ -21,21 +20,23 @@ func init() {
 	ns := beego.NewNamespace("v1",
 		beego.NSRouter("/login", &controllers.MainController{}, "post:Login"),
 		beego.NSNamespace("/org",
-			beego.NSRouter("/",&controllers.MainController{},"get:GetOrgs"),
+			beego.NSRouter("/", &controllers.MainController{}, "get:GetOrgs"),
 			beego.NSRouter("/:orgBin", &controllers.MainController{}, "get:PickOrg"),
 			beego.NSRouter("/:orgBin/kkms", &controllers.MainController{}, "get:GetKkms"),
-			beego.NSRouter("/:orgBin/kkms/:kkmId", &controllers.MainController{}, "get:PickKkm"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId", &controllers.MainController{}, "post:PickKkm"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/open", &controllers.ShiftController{}, "post:OpenShift"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/isopen", &controllers.ShiftController{}, "get:IsOpenShift"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/closeShift", &controllers.ShiftController{}, "post:CloseShift"),
-			beego.NSRouter("/:orgBin/kkms/:kkmId/probitCheck",&controllers.ShiftController{},"post:ProbitCheque"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/probitCheck", &controllers.ShiftController{}, "post:ProbitCheque"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/depositCash", &controllers.ShiftController{}, "post:DepositCash"),
-			beego.NSRouter("/:orgBin/kkms/:kkmId/withdrawCash", &controllers.ShiftController{}, "post:WithdrawCash"),
-			beego.NSRouter("/:orgBin/kkms/:kkmId/Zreport",&controllers.ShiftController{},"get:ShowZreport"),
-			),
+			beego.NSRouter("/:orgBin/kkms/	:kkmId/withdrawCash", &controllers.ShiftController{}, "post:WithdrawCash"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/Zreport", &controllers.ShiftController{}, "get:ShowZreport"),
+		),
+		beego.NSNamespace("checks",
+			beego.NSRouter("/", &controllers.ShiftController{}, "get:GetCheques"),
+
+		),
 		beego.NSBefore(handlers.Jwt),
 	)
 	beego.AddNamespace(ns)
 }
-
-
