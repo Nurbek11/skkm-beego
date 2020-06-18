@@ -2,6 +2,7 @@ package models
 
 type Cheque struct {
 	Id            int    `orm:"auto"`
+	Kkm_id        int
 	TotalSum      string
 	ChangeMoney   string
 	TotalDiscount string

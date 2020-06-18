@@ -210,6 +210,7 @@ func (s *ShiftController) ProbitCheque() {
 			cheque.NDS = chequeData.Cheque.NDS
 			cheque.PaymentType = chequeData.Cheque.PaymentType
 			cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
+			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 			o.Insert(&cheque)
 
 			for i := 0; i < len(chequeData.Cheque.Goods); i++ {
@@ -247,6 +248,7 @@ func (s *ShiftController) ProbitCheque() {
 		cheque.NDS = chequeData.Cheque.NDS
 		cheque.PaymentType = chequeData.Cheque.PaymentType
 		cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
+		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 		o.Insert(&cheque)
 
 		for i := 0; i < len(chequeData.Cheque.Goods); i++ {
@@ -272,42 +274,25 @@ func (s *ShiftController) ProbitCheque() {
 }
 
 func (s *ShiftController) GetCheques() {
+	kkmId := s.Ctx.Input.Param(":kkmId")
 	o := orm.NewOrm()
 	var cheques []models.Cheque
-	o.QueryTable("cheque").All(&cheques)
-	var products []models.Product
-	o.QueryTable("product").All(&products)
+	o.QueryTable("cheque").Filter("kkm_id",kkmId).All(&cheques)
+	if len(cheques)<1 {
+		s.Data["json"] = "there is no cheque"
+	}else {
+		var products []models.Product
+		for i := 0; i < len(cheques); i++ {
+			o.QueryTable("product").Filter("cheque_id", cheques[i].Id).All(&products)
+		}
 
-	var f interface{}
-	f = map[string]interface{}{
-		"cheques":  cheques,
-		"products": products,
+		var f interface{}
+		f = map[string]interface{}{
+			"cheques":  cheques,
+			"products": products,
+		}
+		s.Data["json"] = f
 	}
-
-	//var chequeData = make([]models.ChequeData, len(cheques))
-	//for i := 0; i <= len(cheques)-1; i++ {
-	//
-	//	o.QueryTable("product").All(chequeData[i].Goods)
-	//	chequeData[i].TotalSum = cheques[i].TotalSum
-	//	chequeData[i].ChangeMoney = cheques[i].ChangeMoney
-	//	chequeData[i].TotalDiscount = cheques[i].TotalDiscount
-	//	chequeData[i].TotalCharge = cheques[i].TotalCharge
-	//	chequeData[i].NDS = cheques[i].NDS
-	//	chequeData[i].PaymentType = cheques[i].PaymentType
-	//for j := 0; j < len(products)-1; {
-	//chequeData[0].Goods[0].GoodId = 1
-	//chequeData[i].Goods[j].GoodPrice = products[j].Price
-	//chequeData[i].Goods[j].GoodDiscount = products[j].Discount
-	//chequeData[i].Goods[j].GoodExtraCharge = products[j].ExtraCharge
-	//chequeData[i].Goods[j].GoodNumber = products[j].Number
-	//chequeData[i].Goods[j].GoodSum = products[j].Sum
-	//chequeData[i].Goods[j].IsDisPrice = products[j].IsDisPrice
-	//chequeData[i].Goods[j].IsDisDiscount = products[j].IsDisDiscount
-	//chequeData[i].Goods[j].IsDisExCharge = products[j].IsDisExCharge
-	//chequeData[i].Goods[j].IsDisNumber = products[j].IsDisNumber
-	//}
-	//}
-	s.Data["json"] = f
 	s.ServeJSON()
 }
 
@@ -354,6 +339,7 @@ func (s *ShiftController) ReturnSale() {
 			cheque.PaymentType = chequeData.Cheque.PaymentType
 			cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
 			cheque.OperationType = "return"
+			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 			o.Insert(&cheque)
 
 			for i := 0; i < len(chequeData.Cheque.Goods); i++ {
@@ -392,6 +378,7 @@ func (s *ShiftController) ReturnSale() {
 		cheque.PaymentType = chequeData.Cheque.PaymentType
 		cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
 		cheque.OperationType = "return"
+		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 		o.Insert(&cheque)
 
 		for i := 0; i < len(chequeData.Cheque.Goods); i++ {
