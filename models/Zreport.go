@@ -4,10 +4,11 @@ import "time"
 
 type Zreport struct {
 	Id               int `orm:"auto"`
-	DateTime   time.Time
-	ShiftOpening     time.Time
-	ShiftClosing     time.Time
-	Shift            int
+	CashierId        int
+	OrganizationId   int
+	ShiftId          int
+	Cash             string
+	TimeOfCreation   time.Time
 	StartSales       string
 	StartPayouts     string
 	StartSalesReturn string
