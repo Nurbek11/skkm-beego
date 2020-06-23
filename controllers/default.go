@@ -8,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/skkm-beego/models"
 	"strconv"
+	"time"
 
 )
 
@@ -155,5 +156,78 @@ func (c *MainController) PickKkm() {
 	}
 	c.ServeJSON()
 }
+
+func (s *MainController) CloseShift() {
+	o := orm.NewOrm()
+	orgBin := s.Ctx.Input.Param(":orgBin")
+	kkmId := s.Ctx.Input.Param(":kkmId")
+	var zreportall []models.Zreport
+	o.QueryTable("zreport").All(&zreportall)
+	var organization models.Organization
+	o.QueryTable("organization").Filter("bin", orgBin).All(&organization)
+	var kkm models.Kkm
+	o.QueryTable("kkm").Filter("id", kkmId).All(&kkm)
+	var shift []models.Shift
+	o.QueryTable("shift").Filter("is_open_shift", true).All(&shift)
+	if len(shift) < 1 {
+		s.Data["json"] = "No open shift"
+	}else{
+		var zreport = zreportall[len(zreportall)-1]
+		zreport.CashierId = s.GetAuthUser().Id
+		zreport.OrganizationId, _ = strconv.Atoi(orgBin)
+		zreport.ShiftId = shift[0].Id
+		zreport.Cash = kkm.Cash
+		zreport.TimeOfCreation = time.Now()
+		var cheques []models.Cheque
+		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("operation_type","sale").All(&cheques)
+		var chequesReturn []models.Cheque
+		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("operation_type","return").All(&chequesReturn)
+		var total = 0
+		var totalReturn = 0
+		for i:=0;i< len(cheques);i++  {
+			totalSum, _ := strconv.Atoi(cheques[i].TotalSum)
+			total = total+totalSum
+			}
+		for i:=0;i< len(chequesReturn);i++  {
+			totalReturnSum, _ := strconv.Atoi(chequesReturn[i].TotalSum)
+			totalReturn = totalReturn+totalReturnSum
+		}
+		var startSales, _ = strconv.Atoi(zreport.StartSales)
+		zreport.StartSales = strconv.Itoa(startSales - total)
+		var startSalesReturn, _ = strconv.Atoi(zreport.StartSalesReturn)
+		zreport.StartSalesReturn = strconv.Itoa(startSalesReturn - totalReturn)
+		o.Update(&zreport)
+
+
+		//elements := map[string]map[string]string{
+		//	//"OverInfo": {
+		//	//	"address":           organization.Address,
+		//	//	"bin":               organization.Bin,
+		//	//	"shift_number":      strconv.Itoa(shift[0].Id),
+		//	//	"cash":              kkm.Cash,
+		//	//	"creationTime":      time.Now().String(),
+		//	//	"depositing":        shift[0].Depositing,
+		//	//	"withdrawing":       shift[0].Withdrawing,
+		//	//	"openingOfTheShift": shift[0].ShiftOpening.String(),
+		//	//	"closingOfTheShift": shift[0].ShiftClosing.String(),
+		//	//},
+		//	"infoAtTheBeginningOfTheShift": {
+		//		"sales":         "sales",
+		//		"payouts":       "payouts",
+		//		"returnOfSales": "returnOfSales",
+		//		"refunds":       "refunds",
+		//	},
+		//	"infoForTheCurrentShift": {
+		//		"sales":         "sales",
+		//		"payouts":       "payouts",
+		//		"returnOfSales": "returnOfSales",
+		//		"refunds":       "refunds",
+		//	},
+		//}
+		s.Data["json"] = total
+	}
+	s.ServeJSON()
+}
+
 
 

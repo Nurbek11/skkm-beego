@@ -50,60 +50,6 @@ func (s *ShiftController) IsOpenShift() {
 	s.ServeJSON()
 }
 
-func (s *ShiftController) CloseShift() {
-	o := orm.NewOrm()
-	orgId := s.Ctx.Input.Param(":orgId")
-	kkmId := s.Ctx.Input.Param(":kkmId")
-	var zreportall []models.Zreport
-	o.QueryTable("zreport").All(&zreportall)
-	zreport := zreportall[len(zreportall)]
-	var organization models.Organization
-	o.QueryTable("organization").Filter("id", orgId).All(&organization)
-	var kkm models.Kkm
-	o.QueryTable("kkm").Filter("id", kkmId).All(&kkm)
-	var shift []models.Shift
-	o.QueryTable("shift").Filter("is_open_shift", true).All(&shift)
-	if len(shift) == 0 {
-		s.Data["json"] = "No open shift"
-	} else {
-
-		zreport.CashierId = 1
-		zreport.OrganizationId, _ = strconv.Atoi(orgId)
-		zreport.ShiftId = shift[0].Id
-		zreport.Cash = kkm.Cash
-		zreport.TimeOfCreation = time.Now()
-		o.Update(&zreport)
-
-		elements := map[string]map[string]string{
-			"OverInfo": {
-				"address":           organization.Address,
-				"bin":               organization.Bin,
-				"shift_number":      strconv.Itoa(shift[0].Id),
-				"cash":              kkm.Cash,
-				"creationTime":      time.Now().String(),
-				"depositing":        shift[0].Depositing,
-				"withdrawing":       shift[0].Withdrawing,
-				"openingOfTheShift": shift[0].ShiftOpening.String(),
-				"closingOfTheShift": shift[0].ShiftClosing.String(),
-			},
-			"infoAtTheBeginningOfTheShift": {
-				"sales":         "sales",
-				"payouts":       "payouts",
-				"returnOfSales": "returnOfSales",
-				"refunds":       "refunds",
-			},
-			"infoForTheCurrentShift": {
-				"sales":         "sales",
-				"payouts":       "payouts",
-				"returnOfSales": "returnOfSales",
-				"refunds":       "refunds",
-			},
-		}
-		s.Data["json"] = elements
-	}
-	s.ServeJSON()
-}
-
 func (s *ShiftController) DepositCash() {
 	amount, _ := s.GetInt("amount")
 	kkmId := s.Ctx.Input.Param(":kkmId")
@@ -201,23 +147,48 @@ func (s *ShiftController) ProbitCheque() {
 			cheque.PaymentType = chequeData.Cheque.PaymentType
 			cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
 			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
+			cheque.OperationType = "sale"
 			o.Insert(&cheque)
-
-			var zreport models.Zreport
-			zreport.Id = shift.Id
-			zreport.CashierId = 0
-			zreport.OrganizationId = 0
-			zreport.ShiftId = shift.Id
-			zreport.Cash = kkm.Cash
-			zreport.StartSales = chequeData.Cheque.TotalSum
-			zreport.StartPayouts = "0"
-			zreport.StartRefunds = "0"
-			zreport.StartSalesReturn = "0"
-			zreport.ShiftSales = chequeData.Cheque.TotalSum
-			zreport.ShiftPayouts = "0"
-			zreport.ShiftRefunds = "0"
-			zreport.ShiftSalesReturn = "0"
-			o.Insert(&zreport)
+			var zreports []models.Zreport
+			o.QueryTable("zreport").All(&zreports)
+			if len(zreports)==0 {
+				var zreport models.Zreport
+				zreport.Id = shift.Id
+				zreport.CashierId = 0
+				zreport.OrganizationId = 0
+				zreport.ShiftId = shift.Id
+				zreport.Cash = kkm.Cash
+				zreport.StartSales = chequeData.Cheque.TotalSum
+				zreport.StartPayouts = "0"
+				zreport.StartRefunds = "0"
+				zreport.StartSalesReturn = "0"
+				zreport.ShiftSales = chequeData.Cheque.TotalSum
+				zreport.ShiftPayouts = "0"
+				zreport.ShiftRefunds = "0"
+				zreport.ShiftSalesReturn = "0"
+				o.Insert(&zreport)
+			}else{
+				var zreportLast = zreports[len(zreports)-1]
+				var zreport models.Zreport
+				totalSum, _ := strconv.Atoi(chequeData.Cheque.TotalSum)
+				var shiftSales, _ = strconv.Atoi(zreportLast.ShiftSales)
+				zreport.StartSales = strconv.Itoa(shiftSales + totalSum)
+				zreport.ShiftSales = strconv.Itoa(shiftSales + totalSum)
+				zreport.Id = shift.Id
+				zreport.CashierId = 0
+				zreport.OrganizationId = 0
+				zreport.ShiftId = shift.Id
+				zreport.Cash = kkm.Cash
+				zreport.StartSales = strconv.Itoa(shiftSales + totalSum)
+				zreport.StartPayouts = "0"
+				zreport.StartRefunds = "0"
+				zreport.StartSalesReturn = "0"
+				zreport.ShiftSales = strconv.Itoa(shiftSales + totalSum)
+				zreport.ShiftPayouts = "0"
+				zreport.ShiftRefunds = "0"
+				zreport.ShiftSalesReturn = "0"
+				o.Insert(&zreport)
+			}
 
 			for i := 0; i < len(chequeData.Cheque.Goods); i++ {
 				var product models.Product
@@ -255,15 +226,16 @@ func (s *ShiftController) ProbitCheque() {
 		cheque.PaymentType = chequeData.Cheque.PaymentType
 		cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
 		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
+		cheque.OperationType = "sale"
 		o.Insert(&cheque)
 
 		totalSum, _ := strconv.Atoi(chequeData.Cheque.TotalSum)
 		var zreport models.Zreport
 		o.QueryTable("zreport").Filter("id", shifts[0].Id).All(&zreport)
 		zreport.Cash = kkm.Cash
-		var startSales, _ = strconv.Atoi(zreport.StartSales)
-		zreport.StartSales = strconv.Itoa(startSales + totalSum)
-		zreport.ShiftSales = strconv.Itoa(startSales + totalSum)
+		var shiftSales, _ = strconv.Atoi(zreport.ShiftSales)
+		zreport.StartSales = strconv.Itoa(shiftSales + totalSum)
+		zreport.ShiftSales = strconv.Itoa(shiftSales + totalSum)
 		o.Update(&zreport)
 
 		for i := 0; i < len(chequeData.Cheque.Goods); i++ {
@@ -309,16 +281,14 @@ func (s *ShiftController) GetCheques() {
 	s.ServeJSON()
 }
 
-func (c *ShiftController) PickCheque() {
-	checkId := c.Ctx.Input.Param(":checkId")
+func (s *ShiftController) PickCheque() {
+	checkId := s.Ctx.Input.Param(":checkId")
 	o := orm.NewOrm()
 	var products []models.Product
 	o.QueryTable("product").Filter("cheque_id",checkId).All(&products)
-	c.Data["json"] = products
-	c.ServeJSON()
+	s.Data["json"] = products
+	s.ServeJSON()
 }
-
-
 
 func (s *ShiftController) ReturnSale() {
 	o := orm.NewOrm()
@@ -345,7 +315,7 @@ func (s *ShiftController) ReturnSale() {
 			shift.Withdrawing = "0"
 			income, _ := strconv.Atoi(shift.Income)
 			totalSum, _ := strconv.Atoi(chequeData.Cheque.TotalSum)
-			income = income + totalSum
+			income = income - totalSum
 			shift.Income = strconv.Itoa(income)
 			shift.ShiftOpening = time.Now()
 			shift.ShiftClosing = time.Now()
@@ -353,7 +323,7 @@ func (s *ShiftController) ReturnSale() {
 			handlers.SetTimer()
 
 			kkmCash, _ := strconv.Atoi(kkm.Cash)
-			kkm.Cash = strconv.Itoa(kkmCash + totalSum)
+			kkm.Cash = strconv.Itoa(kkmCash - totalSum)
 			o.Update(&kkm)
 
 			cheque.TotalSum = chequeData.Cheque.TotalSum
@@ -404,10 +374,10 @@ func (s *ShiftController) ReturnSale() {
 		income, err := strconv.Atoi(shifts[0].Income)
 		if err == nil {
 			totalSum, _ := strconv.Atoi(chequeData.Cheque.TotalSum)
-			income = income + totalSum
+			income = income - totalSum
 			shifts[0].Income = strconv.Itoa(income)
 			kkmCash, _ := strconv.Atoi(kkm.Cash)
-			kkm.Cash = strconv.Itoa(kkmCash + totalSum)
+			kkm.Cash = strconv.Itoa(kkmCash - totalSum)
 			o.Update(&kkm)
 			o.Update(&shifts[0])
 		}
@@ -425,9 +395,9 @@ func (s *ShiftController) ReturnSale() {
 		var zreport models.Zreport
 		o.QueryTable("zreport").Filter("id", shifts[0].Id).All(&zreport)
 		zreport.Cash = kkm.Cash
-		var startSales, _ = strconv.Atoi(zreport.StartSales)
-		zreport.StartSales = strconv.Itoa(startSales + totalSum)
-		zreport.ShiftSales = strconv.Itoa(startSales + totalSum)
+		var salesReturn, _ = strconv.Atoi(zreport.StartSalesReturn)
+		zreport.StartSalesReturn = strconv.Itoa(salesReturn + totalSum)
+		zreport.ShiftSalesReturn = strconv.Itoa(salesReturn + totalSum)
 		o.Update(&zreport)
 
 		for i := 0; i < len(chequeData.Cheque.Goods); i++ {
