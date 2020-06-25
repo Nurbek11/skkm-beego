@@ -179,12 +179,12 @@ func (s *MainController) CloseShift() {
 		zreport.Cash = kkm.Cash
 		zreport.TimeOfCreation = time.Now()
 		var cheques []models.Cheque
-		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("operation_type","sale").All(&cheques)
+		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("shift_id",shift[0].Id).Filter("operation_type","sale").All(&cheques)
 		var chequesReturn []models.Cheque
-		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("operation_type","return").All(&chequesReturn)
+		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("shift_id",shift[0].Id).Filter("operation_type","return").All(&chequesReturn)
 		var total = 0
 		var totalReturn = 0
-		for i:=0;i< len(cheques);i++  {
+		for i:=0;i< len(cheques);i++{
 			totalSum, _ := strconv.Atoi(cheques[i].TotalSum)
 			total = total+totalSum
 			}
@@ -197,6 +197,9 @@ func (s *MainController) CloseShift() {
 		var startSalesReturn, _ = strconv.Atoi(zreport.StartSalesReturn)
 		zreport.StartSalesReturn = strconv.Itoa(startSalesReturn - totalReturn)
 		o.Update(&zreport)
+
+		shift[0].IsOpenShift = false
+		o.Update(&shift[0])
 
 
 		//elements := map[string]map[string]string{
@@ -224,7 +227,7 @@ func (s *MainController) CloseShift() {
 		//		"refunds":       "refunds",
 		//	},
 		//}
-		s.Data["json"] = total
+		s.Data["json"] = totalReturn
 	}
 	s.ServeJSON()
 }
