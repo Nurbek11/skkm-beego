@@ -9,7 +9,6 @@ import (
 	"github.com/skkm-beego/models"
 	"strconv"
 	"time"
-
 )
 
 type MainController struct {
@@ -137,7 +136,7 @@ func (c *MainController) PickKkm() {
 	} else {
 		if kkm[0].Password != password {
 			c.Data["json"] = "not correct"
-		}else {
+		} else {
 			elements := map[string]map[string]string{
 				"token": map[string]string{
 					"value": c.GetToken().Raw,
@@ -171,7 +170,7 @@ func (s *MainController) CloseShift() {
 	o.QueryTable("shift").Filter("is_open_shift", true).All(&shift)
 	if len(shift) < 1 {
 		s.Data["json"] = "No open shift"
-	}else{
+	} else {
 		var zreport = zreportall[len(zreportall)-1]
 		zreport.CashierId = s.GetAuthUser().Id
 		zreport.OrganizationId, _ = strconv.Atoi(orgBin)
@@ -179,58 +178,75 @@ func (s *MainController) CloseShift() {
 		zreport.Cash = kkm.Cash
 		zreport.TimeOfCreation = time.Now()
 		var cheques []models.Cheque
-		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("shift_id",shift[0].Id).Filter("operation_type","sale").All(&cheques)
+		o.QueryTable("cheque").Filter("kkm_id", kkmId).Filter("shift_id", shift[0].Id).Filter("operation_type", "sale").All(&cheques)
 		var chequesReturn []models.Cheque
-		o.QueryTable("cheque").Filter("kkm_id",kkmId).Filter("shift_id",shift[0].Id).Filter("operation_type","return").All(&chequesReturn)
+		o.QueryTable("cheque").Filter("kkm_id", kkmId).Filter("shift_id", shift[0].Id).Filter("operation_type", "return").All(&chequesReturn)
 		var total = 0
 		var totalReturn = 0
-		for i:=0;i< len(cheques);i++{
+		for i := 0; i < len(cheques); i++ {
 			totalSum, _ := strconv.Atoi(cheques[i].TotalSum)
-			total = total+totalSum
-			}
-		for i:=0;i< len(chequesReturn);i++  {
-			totalReturnSum, _ := strconv.Atoi(chequesReturn[i].TotalSum)
-			totalReturn = totalReturn+totalReturnSum
+			total = total + totalSum
 		}
-		var startSales, _ = strconv.Atoi(zreport.StartSales)
-		zreport.StartSales = strconv.Itoa(startSales - total)
-		var startSalesReturn, _ = strconv.Atoi(zreport.StartSalesReturn)
-		zreport.StartSalesReturn = strconv.Itoa(startSalesReturn - totalReturn)
-		o.Update(&zreport)
+		for i := 0; i < len(chequesReturn); i++ {
+			totalReturnSum, _ := strconv.Atoi(chequesReturn[i].TotalSum)
+			totalReturn = totalReturn + totalReturnSum
+		}
+
+		if len(zreportall) > 1 {
+			var penultZreport = zreportall[len(zreportall)-2]
+
+			if total == 0 {
+				zreport.StartSales = penultZreport.ShiftSales
+				zreport.ShiftSales = penultZreport.ShiftSales
+				o.Update(&zreport)
+			} else {
+				var startSales, _ = strconv.Atoi(zreport.StartSales)
+				zreport.StartSales = strconv.Itoa(startSales - total)
+				o.Update(&zreport)
+			}
+
+			if totalReturn == 0 {
+				zreport.StartSalesReturn = penultZreport.ShiftSalesReturn
+				zreport.ShiftSalesReturn = penultZreport.ShiftSalesReturn
+				o.Update(&zreport)
+			} else {
+				var startSalesReturn, _ = strconv.Atoi(zreport.StartSalesReturn)
+				zreport.StartSalesReturn = strconv.Itoa(startSalesReturn - totalReturn)
+				o.Update(&zreport)
+			}
+		} else {
+			var startSales, _ = strconv.Atoi(zreport.StartSales)
+			zreport.StartSales = strconv.Itoa(startSales - total)
+			var startSalesReturn, _ = strconv.Atoi(zreport.StartSalesReturn)
+			zreport.StartSalesReturn = strconv.Itoa(startSalesReturn - totalReturn)
+			o.Update(&zreport)
+		}
 
 		shift[0].IsOpenShift = false
 		o.Update(&shift[0])
 
+		elements := map[string]map[string]string{
+			"OverInfo": {
+				"address":           organization.Address,
+				"bin":               organization.Bin,
+				"shift_number":      strconv.Itoa(shift[0].Id),
+				"cash":              kkm.Cash,
+				"depositing":        shift[0].Depositing,
+				"withdrawing":       shift[0].Withdrawing,
+				"openingOfTheShift": shift[0].ShiftOpening.String(),
+				"closingOfTheShift": shift[0].ShiftClosing.String(),
+			},
 
-		//elements := map[string]map[string]string{
-		//	//"OverInfo": {
-		//	//	"address":           organization.Address,
-		//	//	"bin":               organization.Bin,
-		//	//	"shift_number":      strconv.Itoa(shift[0].Id),
-		//	//	"cash":              kkm.Cash,
-		//	//	"creationTime":      time.Now().String(),
-		//	//	"depositing":        shift[0].Depositing,
-		//	//	"withdrawing":       shift[0].Withdrawing,
-		//	//	"openingOfTheShift": shift[0].ShiftOpening.String(),
-		//	//	"closingOfTheShift": shift[0].ShiftClosing.String(),
-		//	//},
-		//	"infoAtTheBeginningOfTheShift": {
-		//		"sales":         "sales",
-		//		"payouts":       "payouts",
-		//		"returnOfSales": "returnOfSales",
-		//		"refunds":       "refunds",
-		//	},
-		//	"infoForTheCurrentShift": {
-		//		"sales":         "sales",
-		//		"payouts":       "payouts",
-		//		"returnOfSales": "returnOfSales",
-		//		"refunds":       "refunds",
-		//	},
-		//}
-		s.Data["json"] = totalReturn
+			"infoAtTheBeginningOfTheShift": {
+				"sales":         zreport.StartSales,
+				"returnOfSales": zreport.StartSalesReturn,
+			},
+			"infoForTheCurrentShift": {
+				"sales":         zreport.ShiftSales,
+				"returnOfSales": zreport.ShiftSalesReturn,
+			},
+		}
+		s.Data["json"] = elements
 	}
 	s.ServeJSON()
 }
-
-
-

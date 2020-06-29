@@ -321,28 +321,28 @@ func (s *ShiftController) ReturnSale() {
 			cheque.OperationType = "return"
 			o.Insert(&cheque)
 
-			//var zreports []models.Zreport
-			//o.QueryTable("zreport").All(&zreports)
-			//
-			//if len(zreports) == 0 {
-			//	var zreport models.Zreport
-			//	zreport.Id = shift.Id
-			//	zreport.ShiftId = shift.Id
-			//	zreport.Cash = kkm.Cash
-			//	zreport.StartSalesReturn = chequeData.Cheque.TotalSum
-			//	zreport.ShiftSalesReturn = chequeData.Cheque.TotalSum
-			//	o.Insert(&zreport)
-			//} else {
-			//	var zreportLast = zreports[len(zreports)-1]
-			//	var zreport models.Zreport
-			//	totalSum, _ := strconv.Atoi(chequeData.Cheque.TotalSum)
-			//	var shiftSalesReturn, _ = strconv.Atoi(zreportLast.ShiftSalesReturn)
-			//	zreport.StartSalesReturn = strconv.Itoa(shiftSalesReturn + totalSum)
-			//	zreport.ShiftSalesReturn = strconv.Itoa(shiftSalesReturn + totalSum)
-			//	zreport.ShiftId = shift.Id
-			//	zreport.Cash = kkm.Cash
-			//	o.Insert(&zreport)
-			//}
+			var zreports []models.Zreport
+			o.QueryTable("zreport").All(&zreports)
+			if len(zreports) == 0 {
+				var zreport models.Zreport
+				zreport.Id = shift.Id
+				zreport.ShiftId = shift.Id
+				zreport.Cash = kkm.Cash
+				zreport.StartSalesReturn = chequeData.Cheque.TotalSum
+				zreport.ShiftSalesReturn = chequeData.Cheque.TotalSum
+				o.Insert(&zreport)
+			} else {
+				var zreportLast = zreports[len(zreports)-1]
+				var zreport models.Zreport
+				totalSum, _ := strconv.Atoi(chequeData.Cheque.TotalSum)
+				var shiftSales, _ = strconv.Atoi(zreportLast.ShiftSalesReturn)
+				zreport.Id = shift.Id
+				zreport.ShiftId = shift.Id
+				zreport.Cash = kkm.Cash
+				zreport.StartSalesReturn = strconv.Itoa(shiftSales + totalSum)
+				zreport.ShiftSalesReturn = strconv.Itoa(shiftSales + totalSum)
+				o.Insert(&zreport)
+			}
 
 			for i := 0; i < len(chequeData.Cheque.Goods); i++ {
 				var product models.Product

@@ -10,11 +10,11 @@ type Zreport struct {
 	Cash             string
 	TimeOfCreation   time.Time
 	StartSales       string
-	StartPayouts     string
+
 	StartSalesReturn string
-	StartRefunds     string
+
 	ShiftSales       string
-	ShiftPayouts     string
+
 	ShiftSalesReturn string
-	ShiftRefunds     string
+
 }
