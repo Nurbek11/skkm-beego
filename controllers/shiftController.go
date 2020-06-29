@@ -176,12 +176,12 @@ func (s *ShiftController) ProbitCheque() {
 			for i := 0; i < len(chequeData.Cheque.Goods); i++ {
 				var product models.Product
 				product.ChequeId = cheque.Id
-				product.Title = chequeData.Cheque.Goods[i].GoodTitle
-				product.Price = chequeData.Cheque.Goods[i].GoodPrice
-				product.Discount = chequeData.Cheque.Goods[i].GoodDiscount
-				product.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
-				product.Number = chequeData.Cheque.Goods[i].GoodNumber
-				product.Sum = chequeData.Cheque.Goods[i].GoodSum
+				product.GoodTitle = chequeData.Cheque.Goods[i].GoodTitle
+				product.GoodPrice = chequeData.Cheque.Goods[i].GoodPrice
+				product.GoodDiscount = chequeData.Cheque.Goods[i].GoodDiscount
+				product.GoodExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
+				product.GoodNumber = chequeData.Cheque.Goods[i].GoodNumber
+				product.GoodSum = chequeData.Cheque.Goods[i].GoodSum
 				product.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
 				product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 				product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
@@ -225,12 +225,12 @@ func (s *ShiftController) ProbitCheque() {
 		for i := 0; i < len(chequeData.Cheque.Goods); i++ {
 			var product models.Product
 			product.ChequeId = cheque.Id
-			product.Title = chequeData.Cheque.Goods[i].GoodTitle
-			product.Price = chequeData.Cheque.Goods[i].GoodPrice
-			product.Discount = chequeData.Cheque.Goods[i].GoodDiscount
-			product.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
-			product.Number = chequeData.Cheque.Goods[i].GoodNumber
-			product.Sum = chequeData.Cheque.Goods[i].GoodSum
+			product.GoodTitle = chequeData.Cheque.Goods[i].GoodTitle
+			product.GoodPrice = chequeData.Cheque.Goods[i].GoodPrice
+			product.GoodDiscount = chequeData.Cheque.Goods[i].GoodDiscount
+			product.GoodExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
+			product.GoodNumber = chequeData.Cheque.Goods[i].GoodNumber
+			product.GoodSum = chequeData.Cheque.Goods[i].GoodSum
 			product.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
 			product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 			product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
@@ -347,12 +347,12 @@ func (s *ShiftController) ReturnSale() {
 			for i := 0; i < len(chequeData.Cheque.Goods); i++ {
 				var product models.Product
 				product.ChequeId = cheque.Id
-				product.Title = chequeData.Cheque.Goods[i].GoodTitle
-				product.Price = chequeData.Cheque.Goods[i].GoodPrice
-				product.Discount = chequeData.Cheque.Goods[i].GoodDiscount
-				product.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
-				product.Number = chequeData.Cheque.Goods[i].GoodNumber
-				product.Sum = chequeData.Cheque.Goods[i].GoodSum
+				product.GoodTitle = chequeData.Cheque.Goods[i].GoodTitle
+				product.GoodPrice = chequeData.Cheque.Goods[i].GoodPrice
+				product.GoodDiscount = chequeData.Cheque.Goods[i].GoodDiscount
+				product.GoodExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
+				product.GoodNumber = chequeData.Cheque.Goods[i].GoodNumber
+				product.GoodSum = chequeData.Cheque.Goods[i].GoodSum
 				product.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
 				product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 				product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
@@ -419,12 +419,12 @@ func (s *ShiftController) ReturnSale() {
 		for i := 0; i < len(chequeData.Cheque.Goods); i++ {
 			var product models.Product
 			product.ChequeId = cheque.Id
-			product.Title = chequeData.Cheque.Goods[i].GoodTitle
-			product.Price = chequeData.Cheque.Goods[i].GoodPrice
-			product.Discount = chequeData.Cheque.Goods[i].GoodDiscount
-			product.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
-			product.Number = chequeData.Cheque.Goods[i].GoodNumber
-			product.Sum = chequeData.Cheque.Goods[i].GoodSum
+			product.GoodTitle = chequeData.Cheque.Goods[i].GoodTitle
+			product.GoodPrice = chequeData.Cheque.Goods[i].GoodPrice
+			product.GoodDiscount = chequeData.Cheque.Goods[i].GoodDiscount
+			product.GoodExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
+			product.GoodNumber = chequeData.Cheque.Goods[i].GoodNumber
+			product.GoodSum = chequeData.Cheque.Goods[i].GoodSum
 			product.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
 			product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 			product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
