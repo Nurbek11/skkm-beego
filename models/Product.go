@@ -1,14 +1,14 @@
 package models
 
 type Product struct {
-	GoodId          int `orm:"pk"`
+	Id          int
 	ChequeId        int
-	GoodTitle       string
-	GoodPrice       string
-	GoodDiscount    string
-	GoodExtraCharge string
-	GoodNumber      string
-	GoodSum         string
+	Title       string
+	Price       string
+	Discount    string
+	ExtraCharge string
+	Number      string
+	Sum         string
 	IsDisPrice      bool
 	IsDisDiscount   bool
 	IsDisExCharge   bool
