@@ -169,7 +169,7 @@ func (s *MainController) CloseShift() {
 	var shift []models.Shift
 	o.QueryTable("shift").Filter("is_open_shift", true).All(&shift)
 	if len(shift) < 1 {
-		s.Data["json"] = "No open shift"
+		s.Data["json"] = shift
 	} else {
 		var zreport = zreportall[len(zreportall)-1]
 		zreport.CashierId = s.GetAuthUser().Id
@@ -249,4 +249,35 @@ func (s *MainController) CloseShift() {
 		s.Data["json"] = elements
 	}
 	s.ServeJSON()
+}
+
+func (s *MainController) ReturnXreport() {
+	o := orm.NewOrm()
+	orgBin := s.Ctx.Input.Param(":orgBin")
+	kkmId := s.Ctx.Input.Param(":kkmId")
+	var organization models.Organization
+	o.QueryTable("organization").Filter("bin", orgBin).All(&organization)
+	var kkm models.Kkm
+	o.QueryTable("kkm").Filter("id", kkmId).All(&kkm)
+	var shift []models.Shift
+	o.QueryTable("shift").Filter("is_open_shift", true).All(&shift)
+
+	elements := map[string]map[string]string{
+		"OverInfo": {
+			"address":           organization.Address,
+			"bin":               organization.Bin,
+			"shift_number":      strconv.Itoa(shift[0].Id),
+			"cash":              kkm.Cash,
+			"depositing":        shift[0].Depositing,
+			"withdrawing":       shift[0].Withdrawing,
+			"income":            shift[0].Income,
+			"payouts":           shift[0].Payouts,
+			"openingOfTheShift": shift[0].ShiftOpening.String(),
+			"closingOfTheShift": shift[0].ShiftClosing.String(),
+		},
+	}
+
+	s.Data["json"] = elements
+	s.ServeJSON()
+
 }

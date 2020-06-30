@@ -26,6 +26,7 @@ func init() {
 			beego.NSRouter("/:orgBin/kkms/:kkmId", &controllers.MainController{}, "post:PickKkm"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/open", &controllers.ShiftController{}, "post:OpenShift"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/isopen", &controllers.ShiftController{}, "get:IsOpenShift"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/Xreport", &controllers.MainController{}, "get:ReturnXreport"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/closeShift", &controllers.MainController{}, "post:CloseShift"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/probitCheck", &controllers.ShiftController{}, "post:ProbitCheque"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/returnSale", &controllers.ShiftController{}, "post:ReturnSale"),
