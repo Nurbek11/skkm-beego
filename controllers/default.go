@@ -290,3 +290,36 @@ func (s *MainController) GetProducts(){
 	s.Data["json"] = nomenclature
 	s.ServeJSON()
 }
+
+func (s *MainController) PickProduct(){
+	o := orm.NewOrm()
+	orgBin := s.Ctx.Input.Param(":orgBin")
+	productId := s.Ctx.Input.Param(":productId")
+	var nomenclature models.Nomenclature
+	o.QueryTable("nomenclature").Filter("organization_bin", orgBin).Filter("id",productId).All(&nomenclature)
+	s.Data["json"] = nomenclature
+	s.ServeJSON()
+}
+
+func (s *MainController) EditProduct(){
+	o := orm.NewOrm()
+	orgBin := s.Ctx.Input.Param(":orgBin")
+	productId := s.Ctx.Input.Param(":productId")
+	var editedProduct models.Nomenclature
+	json.Unmarshal([]byte(s.Ctx.Input.RequestBody), &editedProduct)
+	var nomenclature models.Nomenclature
+	o.QueryTable("nomenclature").Filter("organization_bin", orgBin).Filter("id",productId).All(&nomenclature)
+	nomenclature.Title = editedProduct.Title
+	nomenclature.Price = editedProduct.Price
+	nomenclature.Discount = editedProduct.Discount
+	nomenclature.ExtraCharge = editedProduct.ExtraCharge
+	nomenclature.Sum = editedProduct.Sum
+	nomenclature.IsDisPrice = editedProduct.IsDisPrice
+	nomenclature.IsDisDiscount = editedProduct.IsDisDiscount
+	nomenclature.IsDisNumber = editedProduct.IsDisNumber
+	nomenclature.IsDisExCharge = editedProduct.IsDisExCharge
+	o.Update(&nomenclature)
+	s.Data["json"] = nomenclature
+	s.ServeJSON()
+}
+

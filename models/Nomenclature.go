@@ -7,7 +7,6 @@ type Nomenclature struct {
 	Price           string
 	Discount        string
 	ExtraCharge     string
-	Number          string
 	Sum             string
 	IsDisPrice      bool
 	IsDisDiscount   bool

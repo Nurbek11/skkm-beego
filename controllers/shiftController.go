@@ -197,7 +197,6 @@ func (s *ShiftController) ProbitCheque() {
 					nomen.Price = chequeData.Cheque.Goods[i].GoodPrice
 					nomen.Discount = chequeData.Cheque.Goods[i].GoodDiscount
 					nomen.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
-					nomen.Number = chequeData.Cheque.Goods[i].GoodNumber
 					nomen.Sum = chequeData.Cheque.Goods[i].GoodSum
 					nomen.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
 					nomen.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
@@ -264,7 +263,6 @@ func (s *ShiftController) ProbitCheque() {
 				nomen.Price = chequeData.Cheque.Goods[i].GoodPrice
 				nomen.Discount = chequeData.Cheque.Goods[i].GoodDiscount
 				nomen.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
-				nomen.Number = chequeData.Cheque.Goods[i].GoodNumber
 				nomen.Sum = chequeData.Cheque.Goods[i].GoodSum
 				nomen.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
 				nomen.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
@@ -473,3 +471,4 @@ func (s *ShiftController) ReturnSale() {
 
 	s.ServeJSON()
 }
+
