@@ -34,6 +34,8 @@ func init() {
 			beego.NSRouter("/:orgBin/kkms/:kkmId/withdrawCash", &controllers.ShiftController{}, "post:WithdrawCash"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/checks", &controllers.ShiftController{}, "get:GetCheques"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/checks/:checkId", &controllers.ShiftController{}, "get:PickCheque"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/products/", &controllers.MainController{}, "get:GetProducts"),
+
 
 		),
 

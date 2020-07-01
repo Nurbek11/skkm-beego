@@ -281,3 +281,12 @@ func (s *MainController) ReturnXreport() {
 	s.ServeJSON()
 
 }
+
+func (s *MainController) GetProducts(){
+	o := orm.NewOrm()
+	orgBin := s.Ctx.Input.Param(":orgBin")
+	var nomenclature []models.Nomenclature
+	o.QueryTable("nomenclature").Filter("organization_bin", orgBin).All(&nomenclature)
+	s.Data["json"] = nomenclature
+	s.ServeJSON()
+}

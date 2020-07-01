@@ -108,7 +108,7 @@ func (s *ShiftController) WithdrawCash() {
 func (s *ShiftController) ProbitCheque() {
 	o := orm.NewOrm()
 	kkmId := s.Ctx.Input.Param(":kkmId")
-
+	orgBin := s.Ctx.Input.Param(":orgBin")
 	var chequeData models.ChequeData
 	json.Unmarshal([]byte(s.Ctx.Input.RequestBody), &chequeData)
 	var cheque models.Cheque
@@ -118,6 +118,7 @@ func (s *ShiftController) ProbitCheque() {
 	o.QueryTable("kkm").Filter("id", kkmId).All(&kkm)
 	o.QueryTable("shift").Filter("is_open_shift", true).All(&shifts)
 	password := string(chequeData.Password)
+	var nomenclature []models.Nomenclature
 	if len(shifts) == 0 {
 		if password != kkm.Password {
 			s.Data["json"] = "not correct"
@@ -188,6 +189,24 @@ func (s *ShiftController) ProbitCheque() {
 				product.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
 				o.Insert(&product)
 
+				o.QueryTable("nomenclature").Filter("organization_bin",orgBin).Filter("title", chequeData.Cheque.Goods[i].GoodTitle).All(&nomenclature)
+				if len(nomenclature) == 0 {
+					var nomen models.Nomenclature
+					nomen.OrganizationBin = orgBin
+					nomen.Title = chequeData.Cheque.Goods[i].GoodTitle
+					nomen.Price = chequeData.Cheque.Goods[i].GoodPrice
+					nomen.Discount = chequeData.Cheque.Goods[i].GoodDiscount
+					nomen.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
+					nomen.Number = chequeData.Cheque.Goods[i].GoodNumber
+					nomen.Sum = chequeData.Cheque.Goods[i].GoodSum
+					nomen.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
+					nomen.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
+					nomen.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
+					nomen.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+					o.Insert(&nomen)
+				}
+
+
 			}
 			s.Data["json"] = "shift is opened"
 		}
@@ -236,6 +255,23 @@ func (s *ShiftController) ProbitCheque() {
 			product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 			product.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
 			o.Insert(&product)
+
+			o.QueryTable("nomenclature").Filter("organization_bin",orgBin).Filter("title", chequeData.Cheque.Goods[i].GoodTitle).All(&nomenclature)
+			if len(nomenclature) == 0 {
+				var nomen models.Nomenclature
+				nomen.OrganizationBin = orgBin
+				nomen.Title = chequeData.Cheque.Goods[i].GoodTitle
+				nomen.Price = chequeData.Cheque.Goods[i].GoodPrice
+				nomen.Discount = chequeData.Cheque.Goods[i].GoodDiscount
+				nomen.ExtraCharge = chequeData.Cheque.Goods[i].GoodExtraCharge
+				nomen.Number = chequeData.Cheque.Goods[i].GoodNumber
+				nomen.Sum = chequeData.Cheque.Goods[i].GoodSum
+				nomen.IsDisPrice = chequeData.Cheque.Goods[i].IsDisPrice
+				nomen.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
+				nomen.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
+				nomen.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+				o.Insert(&nomen)
+			}
 
 		}
 
