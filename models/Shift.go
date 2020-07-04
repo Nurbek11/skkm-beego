@@ -7,14 +7,17 @@ import (
 type Shift struct {
 	Id           int `orm:"auto"`
 	KkmId        int
+	ShiftNumber    uint32
+	DocumentNumber uint32
+
 	Income       string
 	Payouts      string
 	Withdrawing  string
 	Depositing   string
 	IsOpenShift  bool
-	ShiftOpening time.Time
+	ShiftOpening string
 	ShiftClosing time.Time
-	//`orm:"auto_now_add"`
+
 }
 
 //func IsShiftOpen(shift *Shift) bool {

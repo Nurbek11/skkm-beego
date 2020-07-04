@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-const timeInHours = 500
+const timeInHours = 24
 
 var timer time.Timer
 

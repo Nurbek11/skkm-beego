@@ -28,8 +28,8 @@ func init() {
 			beego.NSRouter("/:orgBin/kkms/:kkmId/isopen", &controllers.ShiftController{}, "get:IsOpenShift"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/Xreport", &controllers.MainController{}, "get:ReturnXreport"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/closeShift", &controllers.MainController{}, "post:CloseShift"),
-			beego.NSRouter("/:orgBin/kkms/:kkmId/probitCheck", &controllers.ShiftController{}, "post:ProbitCheque"),
-			beego.NSRouter("/:orgBin/kkms/:kkmId/returnSale", &controllers.ShiftController{}, "post:ReturnSale"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/probitCheck", &controllers.MainController{}, "post:ProbitCheque"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/returnSale", &controllers.MainController{}, "post:ReturnSale"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/depositCash", &controllers.ShiftController{}, "post:DepositCash"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/withdrawCash", &controllers.ShiftController{}, "post:WithdrawCash"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/checks", &controllers.ShiftController{}, "get:GetCheques"),
@@ -37,8 +37,14 @@ func init() {
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/", &controllers.MainController{}, "get:GetProducts"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/:productId", &controllers.MainController{}, "get:PickProduct"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/:productId/edit", &controllers.MainController{}, "post:EditProduct"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/products/create", &controllers.MainController{}, "post:CreateProduct"),
+
 		),
 		beego.NSBefore(handlers.Jwt),
 	)
 	beego.AddNamespace(ns)
 }
+
+
+
+
