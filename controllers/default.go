@@ -396,6 +396,15 @@ func (s *MainController) ProbitCheque() {
 			cheque.NDS = chequeData.Cheque.NDS
 			cheque.PaymentType = chequeData.Cheque.PaymentType
 			cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
+			cheque.Domain = chequeData.Cheque.Domain
+			cheque.Markup = chequeData.Cheque.Markup
+			cheque.TaxType = chequeData.Cheque.TaxType
+			cheque.TaxationType = chequeData.Cheque.TaxationType
+			cheque.TaxPercent = chequeData.Cheque.TaxPercent
+			cheque.TaxSum = chequeData.Cheque.TaxSum
+			cheque.TaxIsInTotalSum = chequeData.Cheque.TaxIsInTotalSum
+			cheque.CustomerEmail = chequeData.Cheque.CustomerEmail
+			cheque.CustomerPhone = chequeData.Cheque.CustomerPhone
 			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 			cheque.ShiftId = shift.Id
 			cheque.OperationType = "sale"
@@ -439,6 +448,12 @@ func (s *MainController) ProbitCheque() {
 				product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 				product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 				product.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+				product.DiscountSum = chequeData.Cheque.Goods[i].DiscountSum
+				product.DiscountStorno = chequeData.Cheque.Goods[i].DiscountStorno
+				product.MarkupSum = chequeData.Cheque.Goods[i].MarkupSum
+				product.MarkupStorno = chequeData.Cheque.Goods[i].MarkupStorno
+				product.IsStorno = chequeData.Cheque.Goods[i].IsStorno
+				product.Total = chequeData.Cheque.Goods[i].Total
 				o.Insert(&product)
 
 				o.QueryTable("nomenclature").Filter("organization_bin",orgBin).Filter("title", chequeData.Cheque.Goods[i].GoodTitle).All(&nomenclature)
@@ -478,6 +493,15 @@ func (s *MainController) ProbitCheque() {
 		cheque.NDS = chequeData.Cheque.NDS
 		cheque.PaymentType = chequeData.Cheque.PaymentType
 		cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
+		cheque.Domain = chequeData.Cheque.Domain
+		cheque.Markup = chequeData.Cheque.Markup
+		cheque.TaxType = chequeData.Cheque.TaxType
+		cheque.TaxationType = chequeData.Cheque.TaxationType
+		cheque.TaxPercent = chequeData.Cheque.TaxPercent
+		cheque.TaxSum = chequeData.Cheque.TaxSum
+		cheque.TaxIsInTotalSum = chequeData.Cheque.TaxIsInTotalSum
+		cheque.CustomerEmail = chequeData.Cheque.CustomerEmail
+		cheque.CustomerPhone = chequeData.Cheque.CustomerPhone
 		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 		cheque.ShiftId = shifts[0].Id
 		cheque.OperationType = "sale"
@@ -509,6 +533,12 @@ func (s *MainController) ProbitCheque() {
 			product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 			product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 			product.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+			product.DiscountSum = chequeData.Cheque.Goods[i].DiscountSum
+			product.DiscountStorno = chequeData.Cheque.Goods[i].DiscountStorno
+			product.MarkupSum = chequeData.Cheque.Goods[i].MarkupSum
+			product.MarkupStorno = chequeData.Cheque.Goods[i].MarkupStorno
+			product.IsStorno = chequeData.Cheque.Goods[i].IsStorno
+			product.Total = chequeData.Cheque.Goods[i].Total
 			o.Insert(&product)
 
 			o.QueryTable("nomenclature").Filter("organization_bin",orgBin).Filter("title", chequeData.Cheque.Goods[i].GoodTitle).All(&nomenclature)
@@ -578,6 +608,15 @@ func (s *MainController) ReturnSale() {
 			cheque.NDS = chequeData.Cheque.NDS
 			cheque.PaymentType = chequeData.Cheque.PaymentType
 			cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
+			cheque.Domain = chequeData.Cheque.Domain
+			cheque.Markup = chequeData.Cheque.Markup
+			cheque.TaxType = chequeData.Cheque.TaxType
+			cheque.TaxationType = chequeData.Cheque.TaxationType
+			cheque.TaxPercent = chequeData.Cheque.TaxPercent
+			cheque.TaxSum = chequeData.Cheque.TaxSum
+			cheque.TaxIsInTotalSum = chequeData.Cheque.TaxIsInTotalSum
+			cheque.CustomerEmail = chequeData.Cheque.CustomerEmail
+			cheque.CustomerPhone = chequeData.Cheque.CustomerPhone
 			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 			cheque.ShiftId = shift.Id
 			cheque.OperationType = "return"
@@ -622,6 +661,12 @@ func (s *MainController) ReturnSale() {
 				product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 				product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 				product.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+				product.DiscountSum = chequeData.Cheque.Goods[i].DiscountSum
+				product.DiscountStorno = chequeData.Cheque.Goods[i].DiscountStorno
+				product.MarkupSum = chequeData.Cheque.Goods[i].MarkupSum
+				product.MarkupStorno = chequeData.Cheque.Goods[i].MarkupStorno
+				product.IsStorno = chequeData.Cheque.Goods[i].IsStorno
+				product.Total = chequeData.Cheque.Goods[i].Total
 				o.Insert(&product)
 
 			}
@@ -644,6 +689,15 @@ func (s *MainController) ReturnSale() {
 		cheque.NDS = chequeData.Cheque.NDS
 		cheque.PaymentType = chequeData.Cheque.PaymentType
 		cheque.ChangeMoney = chequeData.Cheque.ChangeMoney
+		cheque.Domain = chequeData.Cheque.Domain
+		cheque.Markup = chequeData.Cheque.Markup
+		cheque.TaxType = chequeData.Cheque.TaxType
+		cheque.TaxationType = chequeData.Cheque.TaxationType
+		cheque.TaxPercent = chequeData.Cheque.TaxPercent
+		cheque.TaxSum = chequeData.Cheque.TaxSum
+		cheque.TaxIsInTotalSum = chequeData.Cheque.TaxIsInTotalSum
+		cheque.CustomerEmail = chequeData.Cheque.CustomerEmail
+		cheque.CustomerPhone = chequeData.Cheque.CustomerPhone
 		cheque.OperationType = "return"
 		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 		cheque.ShiftId = shifts[0].Id
@@ -697,6 +751,12 @@ func (s *MainController) ReturnSale() {
 			product.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 			product.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 			product.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+			product.DiscountSum = chequeData.Cheque.Goods[i].DiscountSum
+			product.DiscountStorno = chequeData.Cheque.Goods[i].DiscountStorno
+			product.MarkupSum = chequeData.Cheque.Goods[i].MarkupSum
+			product.MarkupStorno = chequeData.Cheque.Goods[i].MarkupStorno
+			product.IsStorno = chequeData.Cheque.Goods[i].IsStorno
+			product.Total = chequeData.Cheque.Goods[i].Total
 			o.Insert(&product)
 
 		}

@@ -8,7 +8,7 @@ type Product struct {
 	Price          string
 	DiscountSum    int
 	Discount       string
-	DiscountStorno int
+	DiscountStorno bool
 	ExtraCharge    string
 	Number         string
 	Sum            string

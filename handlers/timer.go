@@ -12,7 +12,7 @@ const timeInHours = 24
 var timer time.Timer
 
 func SetTimer() () {
-	timer := time.NewTimer(time.Second * timeInHours)
+	timer := time.NewTimer(time.Hour*timeInHours)
 	go func() {
 		<-timer.C
 		fmt.Println("You have to refresh the shift")
