@@ -1,8 +1,16 @@
 package models
 
 type ChequeData struct {
+
 	Password string `orm:"null"`
 	Cheque   struct {
+		PosTransactionId string
+		PaymentCash      int
+		PaymentCard      int
+		PaymentCredit    int
+		Taken            int
+		TicketType       string
+
 		Domain          string
 		Markup          uint64
 		TotalSum        string
@@ -27,6 +35,7 @@ type ChequeData struct {
 			GoodExtraCharge string
 			GoodNumber      string
 			GoodSum         string
+			SectionCode     string
 			IsDisPrice      bool
 			IsDisDiscount   bool
 			IsDisExCharge   bool

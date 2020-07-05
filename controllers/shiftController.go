@@ -26,6 +26,7 @@ func (s *ShiftController) OpenShift() {
 		shift.Depositing = "0"
 		shift.Withdrawing = "0"
 		shift.Income = "0"
+		shift.ShiftNumber = shift.ShiftNumber+1
 		shift.ShiftOpening = time.Now().String()
 		shift.ShiftClosing = time.Now()
 		o.Insert(&shift)

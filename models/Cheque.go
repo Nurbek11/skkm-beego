@@ -7,7 +7,7 @@ type Cheque struct {
 	Kkm_id  int
 	ShiftId int
 
-	PosTransactionId string
+	PosTransactionId   string
 
 	PaymentType        string
 	OperationType      string
@@ -24,12 +24,12 @@ type Cheque struct {
 	OperatorName string
 	OperatorCode int
 
-	PaymentCash   uint64
-	PaymentCard   uint64
-	PaymentCredit uint64
+	PaymentCash   int
+	PaymentCard   int
+	PaymentCredit int
 
 	TotalSum      string
-	Taken         uint64
+	Taken         int
 	ChangeMoney   string
 	Markup        uint64
 	TotalDiscount string
