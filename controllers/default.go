@@ -331,6 +331,17 @@ func (s *MainController) EditProduct(){
 	s.ServeJSON()
 }
 
+func (s *MainController) RemoveProduct(){
+	o := orm.NewOrm()
+	orgBin := s.Ctx.Input.Param(":orgBin")
+	productId := s.Ctx.Input.Param(":productId")
+	var nomenclature models.Nomenclature
+	o.QueryTable("nomenclature").Filter("organization_bin", orgBin).Filter("id",productId).All(&nomenclature)
+	o.Delete(&nomenclature)
+	s.Data["json"] = nomenclature
+	s.ServeJSON()
+}
+
 func (s *MainController) CreateProduct(){
 	o := orm.NewOrm()
 	orgBin := s.Ctx.Input.Param(":orgBin")

@@ -37,6 +37,7 @@ func init() {
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/", &controllers.MainController{}, "get:GetProducts"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/:productId", &controllers.MainController{}, "get:PickProduct"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/:productId/edit", &controllers.MainController{}, "post:EditProduct"),
+			beego.NSRouter("/:orgBin/kkms/:kkmId/products/:productId/remove", &controllers.MainController{}, "post:RemoveProduct"),
 			beego.NSRouter("/:orgBin/kkms/:kkmId/products/create", &controllers.MainController{}, "post:CreateProduct"),
 
 		),
