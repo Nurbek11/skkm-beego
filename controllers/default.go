@@ -325,6 +325,7 @@ func (s *MainController) EditProduct(){
 	nomenclature.IsDisDiscount = editedProduct.IsDisDiscount
 	nomenclature.IsDisNumber = editedProduct.IsDisNumber
 	nomenclature.IsDisExCharge = editedProduct.IsDisExCharge
+	nomenclature.QuantityInStock = editedProduct.QuantityInStock
 	o.Update(&nomenclature)
 	s.Data["json"] = nomenclature
 	s.ServeJSON()
@@ -346,6 +347,7 @@ func (s *MainController) CreateProduct(){
 	nomenclature.IsDisDiscount = requestProduct.IsDisDiscount
 	nomenclature.IsDisNumber = requestProduct.IsDisNumber
 	nomenclature.IsDisExCharge = requestProduct.IsDisExCharge
+	nomenclature.QuantityInStock = requestProduct.QuantityInStock
 	o.Insert(&nomenclature)
 	s.Data["json"] = nomenclature
 	s.ServeJSON()
@@ -477,6 +479,7 @@ func (s *MainController) ProbitCheque() {
 					nomen.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 					nomen.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 					nomen.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+
 					o.Insert(&nomen)
 				}
 
@@ -569,6 +572,7 @@ func (s *MainController) ProbitCheque() {
 				nomen.IsDisDiscount = chequeData.Cheque.Goods[i].IsDisDiscount
 				nomen.IsDisExCharge = chequeData.Cheque.Goods[i].IsDisExCharge
 				nomen.IsDisNumber = chequeData.Cheque.Goods[i].IsDisNumber
+
 				o.Insert(&nomen)
 			}
 

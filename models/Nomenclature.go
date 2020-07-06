@@ -3,6 +3,7 @@ package models
 type Nomenclature struct {
 	Id              int
 	OrganizationBin string
+	QuantityInStock string
 	Title           string
 	Price           string
 	Discount        string
