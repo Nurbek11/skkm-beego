@@ -11,7 +11,7 @@ type Cheque struct {
 
 	PaymentType        string
 	OperationType      string
-	TicketType         string
+
 	DateTime           time.Time
 	Domain             string
 	MoneyPlacementType string
@@ -29,7 +29,7 @@ type Cheque struct {
 	PaymentCredit int
 
 	TotalSum      string
-	Taken         int
+
 	ChangeMoney   string
 	Markup        uint64
 	TotalDiscount string

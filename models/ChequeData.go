@@ -8,8 +8,8 @@ type ChequeData struct {
 		PaymentCash      int
 		PaymentCard      int
 		PaymentCredit    int
-		Taken            int
-		TicketType       string
+
+
 
 		Domain          string
 		Markup          uint64

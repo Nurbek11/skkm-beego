@@ -338,7 +338,7 @@ func (s *MainController) RemoveProduct(){
 	var nomenclature models.Nomenclature
 	o.QueryTable("nomenclature").Filter("organization_bin", orgBin).Filter("id",productId).All(&nomenclature)
 	o.Delete(&nomenclature)
-	s.Data["json"] = nomenclature
+	s.Data["json"] = productId
 	s.ServeJSON()
 }
 
@@ -422,8 +422,7 @@ func (s *MainController) ProbitCheque() {
             cheque.PaymentCash = chequeData.Cheque.PaymentCash
             cheque.PaymentCard = chequeData.Cheque.PaymentCard
             cheque.PaymentCredit = chequeData.Cheque.PaymentCredit
-            cheque.Taken = chequeData.Cheque.Taken
-			cheque.TicketType = chequeData.Cheque.TicketType
+
 
 			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 			cheque.ShiftId = shift.Id
@@ -528,8 +527,6 @@ func (s *MainController) ProbitCheque() {
 		cheque.PaymentCash = chequeData.Cheque.PaymentCash
 		cheque.PaymentCard = chequeData.Cheque.PaymentCard
 		cheque.PaymentCredit = chequeData.Cheque.PaymentCredit
-		cheque.Taken = chequeData.Cheque.Taken
-		cheque.TicketType = chequeData.Cheque.TicketType
 		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 		cheque.ShiftId = shifts[0].Id
 		cheque.OperationType = "sale"
@@ -651,8 +648,6 @@ func (s *MainController) ReturnSale() {
 			cheque.PaymentCash = chequeData.Cheque.PaymentCash
 			cheque.PaymentCard = chequeData.Cheque.PaymentCard
 			cheque.PaymentCredit = chequeData.Cheque.PaymentCredit
-			cheque.Taken = chequeData.Cheque.Taken
-			cheque.TicketType = chequeData.Cheque.TicketType
 			cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 			cheque.ShiftId = shift.Id
 			cheque.OperationType = "return"
@@ -739,8 +734,6 @@ func (s *MainController) ReturnSale() {
 		cheque.PaymentCash = chequeData.Cheque.PaymentCash
 		cheque.PaymentCard = chequeData.Cheque.PaymentCard
 		cheque.PaymentCredit = chequeData.Cheque.PaymentCredit
-		cheque.Taken = chequeData.Cheque.Taken
-		cheque.TicketType = chequeData.Cheque.TicketType
 		cheque.OperationType = "return"
 		cheque.Kkm_id, _ = strconv.Atoi(kkmId)
 		cheque.ShiftId = shifts[0].Id
