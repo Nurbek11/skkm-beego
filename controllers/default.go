@@ -365,7 +365,7 @@ func (s *MainController) CreateProduct(){
 			nomenclature.QuantityInStock = requestProduct[i].QuantityInStock
 			o.Insert(&nomenclature)
 		}
-		s.Data["json"] = "done"
+		s.Data["json"] = len(requestProduct)
 	}
 	s.ServeJSON()
 }
