@@ -345,22 +345,28 @@ func (s *MainController) RemoveProduct(){
 func (s *MainController) CreateProduct(){
 	o := orm.NewOrm()
 	orgBin := s.Ctx.Input.Param(":orgBin")
-	var requestProduct models.Nomenclature
+	var requestProduct []models.Nomenclature
 	json.Unmarshal([]byte(s.Ctx.Input.RequestBody), &requestProduct)
-	var nomenclature models.Nomenclature
-	nomenclature.OrganizationBin = orgBin
-	nomenclature.Title = requestProduct.Title
-	nomenclature.Price = requestProduct.Price
-	nomenclature.Discount = requestProduct.Discount
-	nomenclature.ExtraCharge = requestProduct.ExtraCharge
-	nomenclature.Sum = requestProduct.Sum
-	nomenclature.IsDisPrice = requestProduct.IsDisPrice
-	nomenclature.IsDisDiscount = requestProduct.IsDisDiscount
-	nomenclature.IsDisNumber = requestProduct.IsDisNumber
-	nomenclature.IsDisExCharge = requestProduct.IsDisExCharge
-	nomenclature.QuantityInStock = requestProduct.QuantityInStock
-	o.Insert(&nomenclature)
-	s.Data["json"] = nomenclature
+	if len(requestProduct)==0 {
+		s.Data["json"] = "no data"
+	}else {
+		for i := 0; i < len(requestProduct); i++ {
+			var nomenclature models.Nomenclature
+			nomenclature.OrganizationBin = orgBin
+			nomenclature.Title = requestProduct[i].Title
+			nomenclature.Price = requestProduct[i].Price
+			nomenclature.Discount = requestProduct[i].Discount
+			nomenclature.ExtraCharge = requestProduct[i].ExtraCharge
+			nomenclature.Sum = requestProduct[i].Sum
+			nomenclature.IsDisPrice = requestProduct[i].IsDisPrice
+			nomenclature.IsDisDiscount = requestProduct[i].IsDisDiscount
+			nomenclature.IsDisNumber = requestProduct[i].IsDisNumber
+			nomenclature.IsDisExCharge = requestProduct[i].IsDisExCharge
+			nomenclature.QuantityInStock = requestProduct[i].QuantityInStock
+			o.Insert(&nomenclature)
+		}
+		s.Data["json"] = "done"
+	}
 	s.ServeJSON()
 }
 
